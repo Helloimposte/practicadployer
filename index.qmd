@@ -1,0 +1,135 @@
+---
+title: "pratica-dplyr"
+author: "Bernardo"
+format: html
+toc: true
+lang: es
+theme: stale 
+editor: visual
+---ption disables the printing of code (only output is displayed).
+---
+
+#Introducción
+
+Este documento contiene algunos ejemplos de uso de las funciones del paquete dplyr de \[Tydyverse\] (https://www.tydyverse.org/)
+
+#Carga de paquetes
+
+```{r}
+# | label: carga-paquetes
+# | message: false 
+# | warning: false 
+
+library(tidyverse)
+library(palmerpenguins)
+library(knitr)
+
+```
+
+#Carga de datos
+
+```{r}
+#| label: carga-datos
+#| message: false
+#| warning: false
+
+delitos_2023 <- read.csv("estadisticaspoliciales2023.csv")
+```
+
+#select
+
+##Ejemplos 1
+
+```{r}
+#| label: select-01
+#select(penguins, species, bill_length_mm, sex)
+
+penguins |> 
+  select(species, bill_length_mm, sex) |>
+  head(10) |>
+  kable()
+
+```
+
+##Ejemplo 2
+
+```{r}
+#| label: select-02
+ 
+penguins |>
+  select(
+    especie = species,
+    longitud_pico_mm = bill_length_mm,
+    sex
+  ) |>
+  head(10) |>
+  kable()
+```
+
+# arrange()
+
+## ejemplo 1
+
+```{r}
+#| label: arrange-01
+
+penguins |>
+  select(species, bill_length_mm, bill_depth_mm) |>
+  head(12) |>
+  kable()
+```
+
+#mutate()
+## Ejemplo 1
+```{r}
+#| label: mutate-01
+
+penguins |>
+  select(especies, sex, body_mass_g) |>
+  mutate(body_mass_lb = body_mass_kg  * 2.2) |>
+  head(12) |>
+  kable()
+```
+
+##ejemplo 2
+
+```{r}
+#| label: mutate-01
+
+delitos_2023 |>
+  select(Delito, SubDelito, Fecha,canton, Hora) |>
+  fliter(canton == "MONTES DE OCA")
+  arrange(Fecha_Date) |>
+  head(500) |>
+  kable()
+```
+
+# sumarize
+## ejemplo-01
+
+```{r}
+#| label: sumarize-01
+
+penguins |>
+group_by(species) |>
+  sumarize(body_mass_g_mean = mean(body_mass_g,na.rm = TRUE))
+           (body_mass_g_min = min(body_mass_g,na.rm = TRUE))
+             (body_mass_g_max = max(body_mass_g,na.rm = TRUE))|>
+  kable()
+```
+
+# ejemplo 2
+## 
+```{r}
+delitos_2023 |>
+
+  select(Delito, SubDelito, Fecha, Hora, Canton) |>
+
+   mutate(Fecha_Date = as.Date(delitos_2023$Fecha, format="%d/%m/%Y")) |>
+
+  filter(Canton == "MONTES DE OCA") |>
+
+  arrange(Fecha_Date) |>
+
+  kable()
+```
