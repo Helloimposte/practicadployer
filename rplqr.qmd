@@ -1,0 +1,73 @@
+title: "pratica-dplyr" author: "Fernanda" format: html toc: true lang: es theme: solar editor: visual ---ption disables the printing of code (only output is displayed).
+
+#Introducción
+
+Este documento contiene algunos ejemplos de uso de las funciones del paquete dplyr de \[Tydyverse\] (https://www.tydyverse.org/)
+
+#Carga de paquetes
+
+```{r}
+# | label: carga-paquetes
+# | message: false 
+# | warning: false 
+
+library(tidyverse)
+library(palmerpenguins)
+library(knitr)
+
+```
+
+#Carga de datos
+
+```{r}
+#| label: carga-datos
+#| message: false
+#| warning: false
+
+delitos_2023 <- read.csv("estadisticaspoliciales2023.csv")
+```
+
+#select
+
+##Ejemplos 1
+
+```{r}
+#| label: select-01
+#select(penguins, species, bill_length_mm, sex)
+
+penguins |> 
+  select(species, bill_length_mm, sex) |>
+  head(10) |>
+  kable()
+
+```
+
+##Ejemplo 2
+
+```{r}
+#| label: select-02
+ 
+penguins |>
+  select(
+    especie = species,
+    longitud_pico_mm = bill_length_mm,
+    sex
+  ) |>
+  head(10) |>
+  kable()
+```
+
+#filter()
+
+##Ejemplo 1
+
+```{r}
+#| label: filter-01
+
+penguins |>
+  select(species, island, sex) |> 
+  filter(species == "Adelie") |>
+  filter(sex == "male") |>
+  filter(island == "Torgersen") |>
+  kable()
+```
